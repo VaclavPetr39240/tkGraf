@@ -38,6 +38,10 @@ class Application(tk.Tk):
         self.lbl = tk.Label(self, text="Hello tkGraf")
         self.lbl.pack()
 
+        self.grafFrame = tk.LabelFrame(self, text='Graf')
+        self.grafFrame.pack(padx=5,pady=5,fill='x')
+
+
         
         self.fileFrame = tk.LabelFrame(self, text='Soubor')
         self.fileFrame.pack(padx=5, pady=5, fill='x')
@@ -58,6 +62,18 @@ class Application(tk.Tk):
 
         self.btn = tk.Button(self, text='Quit', command=self.quit)
         self.btn.pack()
+
+
+        tk.Label(self.grafFrame, text='Titulek').grid(row=0,column=0)
+        self.titleEntry = MyEntry(self.grafFrame)
+        self.titleEntry.grid(row=0,column=1)
+        tk.Label(self.grafFrame, text='Osa X').grid(row=1,column=0)
+        self.xlabelEntry = MyEntry(self.grafFrame)
+        self.xlabelEntry.grid(row=1,column=1)
+        tk.Label(self.grafFrame, text='Osa Y').grid(row=2,column=0)
+        self.ylabelEntry = MyEntry(self.grafFrame)
+        self.ylabelEntry.grid(row=2,column=1)
+
 
     def chooseFile(self):
        path = filedialog.askopenfilename()
@@ -86,6 +102,9 @@ class Application(tk.Tk):
                     y.append(float(y1.replace(',','.')))
         
         pl.plot(x,y)
+        pl.title(self.titleEntry.value)
+        pl.xlabel(self.xlabelEntry.value)
+        pl.ylabel(self.ylabelEntry.value)
         pl.show()
     def quit(self, event=None):
         super().quit()
