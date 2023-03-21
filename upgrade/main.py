@@ -3,6 +3,7 @@
 from os.path import basename, splitext
 import tkinter as tk
 from tkinter import filedialog
+import pylab as pl
 
 # from tkinter import ttk
 
@@ -24,18 +25,6 @@ class MyEntry(tk.Entry):
     @value.setter
     def value(self, new: str):
         self.variable.set(new)
-
-
-class About(tk.Toplevel):
-    def __init__(self, parent):
-        super().__init__(parent, class_=parent.name)
-        self.config()
-
-        btn = tk.Button(self, text="Konec", command=self.close)
-        btn.pack()
-
-    def close(self):
-        self.destroy()
 
 
 class Application(tk.Tk):
@@ -64,15 +53,40 @@ class Application(tk.Tk):
         self.columnRadio.pack(anchor='w')
 
 
-        self.plotBtn = tk.Button(self, text='Graf')
+        self.plotBtn = tk.Button(self, text='Graf', command=self.plot)
         self.plotBtn.pack(fill='x')
 
         self.btn = tk.Button(self, text='Quit', command=self.quit)
         self.btn.pack()
 
     def chooseFile(self):
-       path
+       path = filedialog.askopenfilename()
+       self.fileEntry.value = path
 
+    def plot(self):
+        with open(self.fileEntry.value) as f:
+            if self.dataVar.get() == 'ROW':
+                line = f.readline()
+                x = line.split(';')
+                line = f.readline()
+                y = line.split(';')
+                x = [ float(i.replace(',','.')) for i in x ]
+                y = [ float(i.replace(',','.')) for i in y ]
+            elif self.dataVar.get() == 'COLUMN':
+                x = []
+                y = []
+                while True:
+                    line = f.readline()
+                    if line == '':
+                        break
+                    if ';' not in line:
+                        continue
+                    x1, y1 = line.split(';')
+                    x.append(float(x1.replace(',','.')))
+                    y.append(float(y1.replace(',','.')))
+        
+        pl.plot(x,y)
+        pl.show()
     def quit(self, event=None):
         super().quit()
 
